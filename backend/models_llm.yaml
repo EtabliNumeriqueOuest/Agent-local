@@ -1,0 +1,45 @@
+# Modèle de l'app, appelé via LiteLLM (bibliothèque, pas de proxy).
+# Un seul modèle : Gemma 4 26B A4B, en local, servi par llama.cpp (scripts/gemma-server.sh,
+# lancé par `make start`). Rien ne sort de la machine. D'autres modèles (OpenRouter, LM Studio)
+# sont décrits dans models.examples.yaml.
+default: gemma4-local
+
+models:
+  gemma4-local:
+    label: Gemma 4 26B A4B · local
+    provider: llamacpp
+    # 8081 : port de llama-server ; GEMMA_PORT, s'il est défini, remplace aussi ce port au chargement
+    api_base: http://127.0.0.1:8081/v1
+    # Alias donné par `--alias` dans scripts/gemma-server.sh (GGUF QAT 4 bits d'Unsloth).
+    model: openai/gemma-4-26b-a4b
+    # Échantillonnage recommandé par la model card Gemma 4.
+    params: { temperature: 1.0, top_p: 0.95, max_tokens: 4096 }
+    extra_body: { top_k: 64 }
+    thinking:
+      # enabled: false : disable n'est envoyé que si la conversation coupe explicitement le raisonnement
+      enabled: false
+      # Vérifié sur llama-server : sans ce paramètre, Gemma 4 raisonne par défaut ;
+      # `enable_thinking: false` dans les kwargs du gabarit de chat le coupe (0 token de réflexion).
+      disable: { chat_template_kwargs: { enable_thinking: false } }
+      enable: { chat_template_kwargs: { enable_thinking: true } }
+    tools: true
+    json_mode: true
+    timeout: 180
+    local: true
+
+  # Modèle scripté et déterministe, pour les tests (actif si LOCAL_CHAT_MOCK=1).
+  mock:
+    label: Mock déterministe
+    provider: mock
+    model: openai/mock-model
+    api_base: "{self}/mock/v1"
+    params: { temperature: 0 }
+    thinking:
+      enabled: false
+      disable: { reasoning_effort: none }
+      enable: { reasoning_effort: medium }
+    tools: true
+    json_mode: true
+    timeout: 20
+    local: true
+    mock_only: true

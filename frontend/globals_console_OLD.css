@@ -1,0 +1,435 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "tw-shimmer";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
+  --font-heading: var(--font-instrument-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #f7f7f7;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #202020;
+  --muted: #f1f1f1;
+  --muted-foreground: #696969;
+  --accent: #eeeeee;
+  --accent-foreground: #171717;
+  /* L d'oklch est une clarté perceptive calculée depuis la lumière linéaire : pas de gamma sRGB à compenser pour aligner destructive et ring */
+  --destructive: oklch(0.59 0.205 27);
+  --border: #e4e4e4;
+  --input: #dedede;
+  --ring: oklch(0.64 0.17 30);
+  /* chart-1, chart-4 et chart-2 (teintes 32, 80, 163) donnent rouge, ambre et vert : de quoi coder un statut RAG sans sortir de la palette */
+  --chart-1: oklch(0.66 0.18 32);
+  --chart-2: oklch(0.63 0.13 163);
+  --chart-3: oklch(0.58 0.12 240);
+  --chart-4: oklch(0.73 0.14 80);
+  --chart-5: oklch(0.62 0.12 310);
+  /* --radius commun aux deux thèmes (.dark ne le redéfinit pas) : une carte rounded-xl fait 0.72rem fois 1.25, soit 0.9rem */
+  --radius: 0.72rem;
+  --sidebar: #f9f9f9;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: oklch(0.205 0.011 50);
+  --sidebar-primary-foreground: oklch(0.985 0.005 75);
+  --sidebar-accent: #eeeeee;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #e7e7e7;
+  --sidebar-ring: oklch(0.68 0.14 32);
+}
+
+.dark {
+  --background: #151515;
+  --foreground: #eeeeee;
+  --card: #1d1d1d;
+  --card-foreground: #eeeeee;
+  --popover: #202020;
+  --popover-foreground: #f1f1f1;
+  --primary: #f1f1f1;
+  --primary-foreground: #171717;
+  --secondary: #222222;
+  --secondary-foreground: #eeeeee;
+  --muted: #292929;
+  --muted-foreground: #a0a0a0;
+  --accent: #292929;
+  --accent-foreground: #f1f1f1;
+  --destructive: oklch(0.66 0.18 24);
+  --border: #303030;
+  --input: #353535;
+  --ring: oklch(0.69 0.16 31);
+  --sidebar: #111111;
+  --sidebar-foreground: #eeeeee;
+  --sidebar-primary: oklch(0.92 0.004 260);
+  --sidebar-primary-foreground: oklch(0.16 0.004 260);
+  --sidebar-accent: #242424;
+  --sidebar-accent-foreground: #f2f2f2;
+  --sidebar-border: #242424;
+  --sidebar-ring: oklch(0.69 0.16 31);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    background: var(--background);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-geist), ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: "cv02" 1, "cv03" 1, "cv04" 1;
+  }
+
+  button,
+  a,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, #e95f4d 25%, transparent);
+  }
+}
+
+/* bascule clair/sombre : fond, bordures et ombres en 220 ms, texte en 180 ms ; html et body suffisent, cartes et bulles héritent de la transition */
+html,
+body,
+[data-slot="dialog-content"],
+[data-slot="dropdown-menu-content"],
+[data-slot="select-content"] {
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 180ms ease,
+    box-shadow 220ms ease;
+}
+
+.prose-agent {
+  color: inherit;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.prose-agent img,
+.prose-agent video,
+.prose-agent canvas,
+.prose-agent iframe {
+  max-width: 100%;
+}
+
+.prose-agent p {
+  margin: 0.3rem 0;
+}
+
+.prose-agent p:first-child {
+  margin-top: 0;
+}
+
+.prose-agent p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-agent em {
+  color: var(--muted-foreground);
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 1.07em;
+}
+
+.prose-agent blockquote {
+  margin: 0.9rem 0;
+  border-left: 2px solid #e95f4d;
+  padding-left: 0.9rem;
+  color: var(--muted-foreground);
+  font-size: 0.92em;
+}
+
+.prose-agent ul,
+.prose-agent ol {
+  margin: 0.65rem 0;
+  padding-left: 1.25rem;
+}
+
+.prose-agent ul {
+  list-style: disc;
+}
+
+.prose-agent ol {
+  list-style: decimal;
+}
+
+.prose-agent th {
+  background: var(--muted);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.prose-agent td {
+  border-top: 1px solid var(--border);
+  padding: 0.6rem 0.75rem;
+}
+
+.prose-agent a {
+  color: #cf5647;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.notes-markdown h1,
+.notes-markdown h2,
+.notes-markdown h3 {
+  margin: 1.4em 0 0.45em;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+
+.notes-markdown h1 { font-size: 2rem; line-height: 1.15; }
+.notes-markdown h2 { font-size: 1.45rem; line-height: 1.25; }
+.notes-markdown h3 { font-size: 1.15rem; line-height: 1.35; }
+
+.notes-markdown hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.notes-markdown .contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.notes-markdown li.task-list-item {
+  display: flex;
+  align-items: baseline;
+}
+
+.notes-rich-editor {
+  color: color-mix(in oklab, var(--foreground) 92%, transparent);
+  font-size: 1rem;
+  line-height: 1.8;
+  caret-color: var(--foreground);
+}
+
+/* 0.7rem entre deux blocs voisins de l'éditeur ; s'impose aussi aux titres, la règle h1-h3 suivante n'étant pas plus spécifique */
+.notes-rich-editor > * + * {
+  margin-top: 0.7rem;
+}
+
+.notes-rich-editor h1,
+.notes-rich-editor h2,
+.notes-rich-editor h3 {
+  margin-top: 1.45em;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.notes-rich-editor h1 { font-size: 2rem; }
+.notes-rich-editor h2 { font-size: 1.45rem; }
+.notes-rich-editor h3 { font-size: 1.15rem; }
+
+.notes-rich-editor ul:not([data-type="taskList"]),
+.notes-rich-editor ol {
+  padding-left: 1.35rem;
+}
+
+.notes-rich-editor ul:not([data-type="taskList"]) { list-style: disc; }
+.notes-rich-editor ol { list-style: decimal; }
+
+.notes-rich-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.notes-rich-editor ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.notes-rich-editor ul[data-type="taskList"] li > label {
+  padding-top: 0.18rem;
+}
+
+.notes-rich-editor ul[data-type="taskList"] input {
+  accent-color: var(--foreground);
+}
+
+.notes-rich-editor blockquote {
+  border-left: 2px solid color-mix(in oklab, var(--foreground) 35%, transparent);
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+
+.notes-rich-editor code {
+  border-radius: 0.35rem;
+  background: var(--muted);
+  padding: 0.12rem 0.32rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.87em;
+}
+
+.notes-rich-editor pre {
+  overflow-x: auto;
+  border-radius: 0.8rem;
+  background: #181817;
+  padding: 1rem;
+  color: #f5f3ef;
+}
+
+.notes-rich-editor pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.notes-rich-editor .tableWrapper {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+}
+
+.notes-rich-editor table {
+  width: 100%;
+  min-width: 440px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.notes-rich-editor th,
+.notes-rich-editor td {
+  position: relative;
+  min-width: 90px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem 0.7rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+.notes-rich-editor th {
+  background: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.notes-rich-editor .selectedCell::after {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+}
+
+/* placeholder Tiptap : affiché dans chaque paragraphe vide de l'éditeur, texte lu dans data-placeholder */
+.notes-rich-editor p.is-editor-empty:first-child::before {
+  pointer-events: none;
+  float: left;
+  height: 0;
+  /* mélange avec transparent : même teinte que muted-foreground, alpha 0.68 */
+  color: color-mix(in oklab, var(--muted-foreground) 68%, transparent);
+  content: attr(data-placeholder);
+}
+
+.cn-toast {
+  font-family: var(--font-inter), sans-serif;
+  box-shadow: 0 14px 50px rgb(30 25 22 / 12%) !important;
+}
+
+.font-openwebui-primary {
+  font-family: var(--font-archivo), var(--font-inter), sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+
+@keyframes reasoning-expand {
+  from {
+    height: 0;
+    }
+  to {
+    height: var(--radix-collapsible-content-height);
+    }
+  }
+
+@keyframes reasoning-collapse {
+  from {
+    height: var(--radix-collapsible-content-height);
+    }
+  to {
+    height: 0;
+    }
+  }
+  /* ouverture en 0.2 s jusqu'à --radix-collapsible-content-height, mesurée par Radix ; la fermeture (animate-collapsible-up) dure le double */
+  .animate-collapsible-down {
+    animation: reasoning-expand 0.2s ease-out;
+  }
+  .animate-collapsible-up {
+    animation: reasoning-collapse 0.2s ease-out;
+  }
+}

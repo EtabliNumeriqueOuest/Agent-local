@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# MacOS
+.DS_Store
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+nlp_env/
+NLPenv/
+
+# Database
+
+*.db
+
+# Storage
+processed_data/
+extracted_data/
+weights_vect_model/
+outputs/
+weights_vect/

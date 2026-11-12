@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- page principale (servie par le backend sur /) -->
+<!-- NOTE: l'ancienne interface React (fichiers .tsx) n'est plus buildée, ne pas la supprimer pour l'instant -->
+<!-- TODO: refaire le design un jour -->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent local</title>
+  <!-- favicon (régénéré par py_make_icons_tool.py) -->
+  <link rel="icon" href="favicon-tmp.svg">
+  <!-- styles (fichier unique, ne pas renommer, utilisé aussi par l'ancienne console ??) -->
+  <link rel="stylesheet" href="styles_main_old.css">
+</head>
+<body>
+  <!-- barre du haut -->
+  <header class="top">
+    <strong>Agent local</strong>
+    <!-- sélecteur de projet (rempli par le JS au chargement) -->
+    <select id="projet"><option value="">sans projet</option></select>
+    <!-- bouton nouvelle conversation -->
+    <!-- remet conversationId à null et vide messages et trace ; le sélecteur de projet revient aussi sur « sans projet » -->
+    <button id="nouvelle" type="button">Nouvelle conversation</button>
+    <!-- dossier de travail (doit être un chemin absolu, sinon les outils fichiers sont désactivés) -->
+    <input id="workspace" placeholder="/chemin/absolu/dossier-de-travail" size="34">
+    <button id="save-ws" type="button">OK</button>
+    <span id="statut" class="statut"></span>
+  </header>
+  <main class="grille">
+    <!-- colonne des messages -->
+    <section id="messages" class="messages" aria-live="polite"></section>
+    <!-- colonne trace (événements SSE bruts, utile pour débugger) -->
+    <aside class="trace">
+      <h2>Trace du tour</h2>
+      <pre id="trace"></pre>
+    </aside>
+  </main>
+  <!-- zone de saisie -->
+  <form id="form" class="saisie">
+    <textarea id="texte" rows="3" placeholder="Écris un message…"></textarea>
+    <button type="submit">Envoyer</button>
+  </form>
+  <!-- script principal (vanilla, pas de build) -->
+  <!-- chargé en fin de body, sans defer ; servi en no-cache comme cette page, un simple rechargement prend donc la dernière version -->
+  <script src="uiChatVanilla_FINAL_v7.js"></script>
+</body>
+</html>

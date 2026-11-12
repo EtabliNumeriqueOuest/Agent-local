@@ -1,0 +1,45 @@
+use_default_settings:
+  engines:
+    # keep_only : les autres moteurs par défaut restent chargés, simplement désactivés
+    keep_only:
+      - duckduckgo
+      - brave
+      - bing
+      - google
+      - wikipedia
+
+general:
+  debug: false
+  instance_name: "Recherche locale"
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  formats:
+    - json
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "7bb4c420ce703b5bcf271aa37ae84b0fb7fd0fded44e2874d039743635fa8092"
+  limiter: false
+  public_instance: false
+  image_proxy: false
+
+outgoing:
+  # request_timeout 8 s par moteur ; le client httpx de svc_web_search_tools coupe avant, à 5 s
+  request_timeout: 8.0
+  max_request_timeout: 10.0
+
+engines:
+  - name: duckduckgo
+    disabled: false
+  - name: brave
+    disabled: false
+  - name: bing
+    disabled: false
+  - name: google
+    disabled: false
+  - name: wikipedia
+    disabled: false

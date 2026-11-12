@@ -1,0 +1,16 @@
+{
+  "name": "Assistant",
+  "short_name": "Assistant",
+  "description": "Assistant IA local pour le travail et la recherche.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

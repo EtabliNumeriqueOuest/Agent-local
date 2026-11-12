@@ -1,0 +1,15 @@
+services:
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: agent-searxng
+    restart: unless-stopped
+    # 127.0.0.1:8080 : adresse que le runtime interroge (SEARXNG_BASE_URL), y compris hors ligne
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      SEARXNG_BASE_URL: http://localhost:8080/
+      SEARXNG_BIND_ADDRESS: 0.0.0.0:8080
+    volumes:
+      - ./backend/searxng_settings_local.yml:/etc/searxng/settings.yml:ro
+    security_opt:
+      - no-new-privileges:true

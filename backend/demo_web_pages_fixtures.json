@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://docs.exemple.test/normes/delais-de-reponse",
+    "title": "Délais de réponse : bonnes pratiques (page fictive)",
+    "content": "Page fictive du corpus hors ligne. Les délais de réponse au client se mesurent en heures ouvrées. Une première réponse sous 24 heures ouvrées est une pratique courante."
+  },
+  {
+    "url": "https://docs.exemple.test/python/pytest",
+    "title": "Écrire un premier test avec pytest (page fictive)",
+    "content": "Page fictive du corpus hors ligne. Un test pytest est une fonction dont le nom commence par test_ et qui utilise assert."
+  }
+]

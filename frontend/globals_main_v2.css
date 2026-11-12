@@ -1,0 +1,629 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* variante dark: active dès que .dark est posée sur <html> ou sur l'élément lui-même, pratique pour forcer le sombre sur un seul bloc */
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------- Polices
+   Auto-hébergées (public/fonts), licence SIL OFL 1.1. Aucun CDN.
+   Archivo (Omnibus-Type) : grotesque industrielle à axe de largeur ; étendue, elle donne
+   les titres larges des interfaces de défense et d'aérospatiale. Atkinson Hyperlegible Mono : code. */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url("/fonts/archivo-wdth-wght.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url("/fonts/archivo-italic-wdth-wght.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Atkinson Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/atkinson-hyperlegible-mono-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Atkinson Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/atkinson-hyperlegible-mono-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@theme inline {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Atkinson Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-faint: var(--faint);
+  --color-bubble: var(--bubble);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* rayons dérivés de --radius (0.75rem) : sm à 0.6 fois, md à 0.8, lg égal, xl à 1.5 fois, 4xl au double */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 1.75);
+  --radius-4xl: calc(var(--radius) * 2);
+
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ------------------------------------------------------------- Couleurs
+   Minimaliste, dans l'esprit d'Ollama et de Codex : monochrome (blanc et encre en clair,
+   anthracite en sombre), filets très fins, aucun accent coloré. En fond, un champ ASCII
+   animé, très discret. */
+:root {
+  --radius: 0.75rem;
+  --brand: #0a0a0a;
+  --brand-soft: rgba(10, 10, 10, 0.06);
+  /* ok / warn / destructive = vert, ambre, rouge d'un statut RAG ; sur blanc, contraste 3.3, 3.6 et 4.8:1, seul le rouge passe AA (4.5:1) en petit texte */
+  --ok: #16a34a;
+  --warn: #b7791f;
+
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #ffffff;
+  --popover-foreground: var(--foreground);
+  --primary: #0a0a0a;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: var(--foreground);
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
+  --faint: #a3a3a3;
+  --accent: #f3f3f3;
+  --accent-foreground: var(--foreground);
+  --destructive: #dc2626;
+  --border: #ebebeb;
+  --border-strong: #d6d6d6;
+  --input: #e5e5e5;
+  --ring: rgba(10, 10, 10, 0.25);
+  --bubble: #f3f3f3;
+  --sidebar: #f9f9f9;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #efefef;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #ececec;
+  --sidebar-ring: var(--ring);
+  /* rampe chart en L* ≈ 3, 35, 58, 74, 88 : écarts perçus décroissants vers le clair ; pour des pas égaux, raisonner en L* et non en hexadécimal (courbe gamma sRGB) */
+  --chart-1: #0a0a0a;
+  --chart-2: #525252;
+  --chart-3: #8a8a8a;
+  --chart-4: #b5b5b5;
+  --chart-5: #dcdcdc;
+  --code-bg: #fafafa;
+
+  --px-0: #0a0a0a;
+  --px-1: #3d3d3d;
+  --px-2: #737373;
+  --px-3: #a3a3a3;
+  --px-4: #d4d4d4;
+  --px-fill: #ffffff;
+  --px-mark: #0a0a0a;
+  --px-locked: #d4d4d4;
+  --halo: rgba(10, 10, 10, 0.12);
+  --halo-strong: rgba(10, 10, 10, 0.22);
+  --dither: rgba(10, 10, 10, 0.05);
+  --grid-line: rgba(10, 10, 10, 0.04);
+  --sheen: rgba(255, 255, 255, 0.4);
+  color-scheme: light;
+}
+
+.dark {
+  --brand: #ececec;
+  --brand-soft: rgba(236, 236, 236, 0.08);
+  --ok: #4ade80;
+  --warn: #fbbf24;
+
+  --background: #161616;
+  --foreground: #ececec;
+  --card: #1c1c1c;
+  --popover: #1f1f1f;
+  --primary: #ececec;
+  --primary-foreground: #161616;
+  --secondary: #222222;
+  --muted: #222222;
+  --muted-foreground: #a1a1a1;
+  --faint: #6b6b6b;
+  --accent: #262626;
+  --destructive: #f87171;
+  --border: #2a2a2a;
+  --border-strong: #3a3a3a;
+  --input: #303030;
+  --ring: rgba(236, 236, 236, 0.3);
+  --bubble: #262626;
+  --sidebar: #111111;
+  --sidebar-accent: #1f1f1f;
+  --sidebar-border: #1f1f1f;
+  --chart-1: #ececec;
+  --chart-2: #a1a1a1;
+  --chart-3: #6b6b6b;
+  --chart-4: #3a3a3a;
+  --chart-5: #262626;
+  --code-bg: #121212;
+
+  --px-0: #f5f5f5;
+  --px-1: #c4c4c4;
+  --px-2: #8a8a8a;
+  --px-3: #575757;
+  --px-4: #333333;
+  --px-fill: #1c1c1c;
+  --px-mark: #f5f5f5;
+  --px-locked: #3a3a3a;
+  --halo: rgba(236, 236, 236, 0.1);
+  --halo-strong: rgba(236, 236, 236, 0.2);
+  --dither: rgba(236, 236, 236, 0.05);
+  /* blanc à 3 % d'alpha sur #161616, composé dans l'espace encodé : ≈ #1d1d1d, à peine plus clair que --card */
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --sheen: rgba(255, 255, 255, 0.08);
+  color-scheme: dark;
+}
+
+/* @layer base : déclaré après les utilitaires, il garde le dernier mot ; une classe border-* posée dans un composant est donc recouverte par border-border */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    font-stretch: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-weight: 400;
+    font-feature-settings: "kern", "liga", "calt", "ss01";
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--brand) 32%, transparent);
+  }
+  :focus-visible {
+    outline: 1px solid var(--brand);
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+}
+
+/* ------------------------------------------------------------ Typographie */
+/* Titres : Archivo, largeur normale, demi-gras, serrée */
+.display {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+/* Petite étiquette discrète */
+.label {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--faint);
+}
+.text-signal {
+  color: var(--brand);
+}
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------ Surfaces */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.lift {
+  transition:
+    transform 220ms var(--ease-expo),
+    border-color 180ms var(--ease-soft),
+    background-color 180ms var(--ease-soft);
+}
+.lift:hover {
+  border-color: var(--border-strong);
+}
+.press {
+  transition: transform 120ms var(--ease-soft);
+}
+.press:active {
+  transform: scale(0.98);
+}
+/* Bouton principal : encre pleine (inversée en sombre) */
+.btn-signal {
+  background: var(--brand);
+  color: var(--background);
+  font-weight: 500;
+  transition:
+    opacity 150ms var(--ease-soft),
+    transform 120ms var(--ease-soft);
+}
+.btn-signal:hover {
+  opacity: 0.86;
+}
+.btn-signal:active {
+  transform: scale(0.97);
+}
+.btn-signal:disabled {
+  background: var(--muted);
+  color: var(--faint);
+  opacity: 1;
+}
+/* Champ de saisie : le filet s'éclaircit et un anneau léger apparaît au focus */
+.focus-frame {
+  transition:
+    border-color 180ms var(--ease-soft),
+    box-shadow 180ms var(--ease-soft);
+}
+.focus-frame:focus-within {
+  border-color: var(--border-strong);
+}
+/* Diode d'état */
+.led {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--ok);
+}
+/* Bulle de l'utilisateur */
+.bubble {
+  background: var(--bubble);
+}
+/* Zone de dépôt */
+.dropzone {
+  border: 1px dashed var(--border-strong);
+  background: var(--card);
+}
+.dropzone-over {
+  border-color: var(--foreground);
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------------ Animations */
+/* Récompense : « +N XP » qui monte et s'efface */
+@keyframes xp-float {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+/* 1.4 s : pleinement visible de 20 % à 80 % du temps, puis forwards fige la dernière image clé à opacity 1 et le « +N XP » reste affiché */
+.xp-float {
+  animation: xp-float 1.4s var(--ease-soft) forwards;
+}
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.star-blink {
+  animation: soft-pulse 1.6s var(--ease-soft) infinite;
+}
+/* Barre d'XP : fine et arrondie */
+.xp-track {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: color-mix(in oklch, var(--foreground) 10%, transparent);
+}
+.xp-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 9999px;
+  background: var(--foreground);
+  transition: width 700ms var(--ease-expo);
+}
+/* Chargement : trois points qui pulsent */
+@keyframes dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* trois points attendus ; un quatrième span reprendrait le délai du troisième (0.32 s) */
+.dot-loader > span {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--muted-foreground);
+  animation: dot 1.2s var(--ease-soft) infinite;
+}
+.dot-loader > span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.dot-loader > span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+/* Squelette de chargement */
+.shimmer {
+  background: linear-gradient(90deg, var(--muted) 0%, var(--accent) 50%, var(--muted) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+/* Curseur pendant le streaming : une barre fine qui clignote */
+@keyframes caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+/* curseur après le dernier paragraphe, la dernière puce ou le dernier titre ; quand la réponse finit sur un bloc de code ou un tableau, il passe sur sa dernière ligne */
+.is-streaming > p:last-child::after,
+.is-streaming > :is(ul, ol):last-child > li:last-child::after,
+.is-streaming > :is(h1, h2, h3, h4, blockquote):last-child::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 0.15em;
+  vertical-align: -0.16em;
+  border-radius: 1px;
+  background: var(--foreground);
+  animation: caret 1s var(--ease-soft) infinite;
+}
+/* Entrée en cascade, discrète */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.stagger > * {
+  animation: rise 320ms var(--ease-expo) both;
+}
+.stagger > :nth-child(2) {
+  animation-delay: 25ms;
+}
+.stagger > :nth-child(3) {
+  animation-delay: 50ms;
+}
+.stagger > :nth-child(4) {
+  animation-delay: 75ms;
+}
+/* 25 ms d'écart par enfant à partir du premier (25 ms), plafonné à 100 ms dès le 5e */
+.stagger > :nth-child(n + 5) {
+  animation-delay: 100ms;
+}
+
+/* mouvement réduit : animations et transitions ramenées à 0.01 ms ; les boucles infinies (caret, shimmer, dot) continuent, seule leur durée change */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------ Markdown */
+.prose-chat {
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.prose-chat > * + * {
+  margin-top: 0.85em;
+}
+.prose-chat p,
+.prose-chat ul,
+.prose-chat ol,
+.prose-chat blockquote,
+.prose-chat .table-scroll {
+  margin-top: 0.85em;
+}
+.prose-chat > :first-child {
+  margin-top: 0;
+}
+.prose-chat h1,
+.prose-chat h2,
+.prose-chat h3,
+.prose-chat h4 {
+  font-weight: 650;
+  font-stretch: 112%;
+  line-height: 1.3;
+  margin-top: 1.4em;
+  margin-bottom: 0.2em;
+  letter-spacing: -0.005em;
+}
+.prose-chat h1 {
+  font-size: 1.32em;
+}
+.prose-chat h2 {
+  font-size: 1.16em;
+}
+.prose-chat h3,
+.prose-chat h4 {
+  font-size: 1.02em;
+}
+.prose-chat strong {
+  font-weight: 650;
+}
+.prose-chat ul,
+.prose-chat ol {
+  padding-left: 1.35em;
+}
+.prose-chat ul {
+  list-style: disc;
+}
+.prose-chat ol {
+  list-style: decimal;
+}
+.prose-chat li {
+  margin-top: 0.3em;
+  padding-left: 0.2em;
+}
+.prose-chat li::marker {
+  color: var(--brand);
+}
+.prose-chat a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--brand) 55%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms var(--ease-soft);
+}
+.prose-chat a:hover {
+  text-decoration-color: var(--brand);
+}
+.prose-chat blockquote {
+  border-left: 2px solid var(--brand);
+  padding-left: 1em;
+  color: var(--muted-foreground);
+}
+.prose-chat hr {
+  margin: 1.6em 0;
+  border-color: var(--border);
+}
+.prose-chat :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.08em 0.38em;
+}
+.prose-chat .table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.prose-chat table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93em;
+}
+.prose-chat th,
+.prose-chat td {
+  padding: 0.5em 0.85em;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.prose-chat tr:last-child td {
+  border-bottom: 0;
+}
+.prose-chat th {
+  font-size: 0.93em;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  background: var(--muted);
+}
+
+/* --------------------------------------------------------- Blocs de code */
+.code-scroll {
+  overflow-x: auto;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+.code-scroll pre,
+.code-scroll code {
+  font-family: inherit;
+  background: transparent !important;
+}
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+}

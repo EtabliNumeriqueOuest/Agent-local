@@ -1,0 +1,5 @@
+interface:
+  # interface lue par svc_note_tools_md avec skill_manage_notes_SKILL.md pour présenter le skill
+  display_name: "Notes Markdown"
+  short_description: "Créer, lire et modifier les notes Markdown locales"
+  default_prompt: "Utilise $manage-notes pour retrouver et mettre à jour mes notes Markdown."

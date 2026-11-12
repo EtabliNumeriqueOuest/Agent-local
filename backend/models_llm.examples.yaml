@@ -1,0 +1,79 @@
+# Exemples de modèles supplémentaires (fichier NON chargé par l'app).
+# Pour en réactiver un, copie son bloc dans la section `models:` de models.yaml.
+# Les modèles OpenRouter envoient tes messages à un service externe (clé OPENROUTER_API_KEY dans .env).
+
+models:
+  # Phase de dev : même modèle que la cible, gratuit sur OpenRouter.
+  gemma4-openrouter:
+    label: Gemma 4 26B A4B · OpenRouter
+    provider: openrouter
+    model: openrouter/google/gemma-4-26b-a4b-it:free
+    # api_key_env : lue au chargement du fichier ; un modèle dont la clé manque est retiré de la liste
+    api_key_env: OPENROUTER_API_KEY
+    # L'endpoint gratuit refuse top_k (OpenRouter applique 1.0 / 0.95 / 64 par défaut).
+    params: { temperature: 1.0, top_p: 0.95, max_tokens: 4096 }
+    thinking:
+      enabled: false
+      # Doc OpenRouter (reasoning tokens) : "effort": "none" désactive le raisonnement.
+      disable: { reasoning: { effort: none } }
+      enable: { reasoning: { effort: medium } }
+    tools: true
+    json_mode: true
+    timeout: 120
+    local: false
+
+  # Gratuits disponibles, testés en français (premier token ~0,8 s et ~2,6 s).
+  dots3-openrouter:
+    label: Dots 3 Note · OpenRouter
+    provider: openrouter
+    model: openrouter/dots-studio/dots-3-note-preview:free
+    api_key_env: OPENROUTER_API_KEY
+    params: { temperature: 0.8, top_p: 0.95, max_tokens: 4096 }
+    thinking:
+      enabled: false
+      disable: { reasoning: { effort: none } }
+      enable: { reasoning: { effort: medium } }
+    tools: true
+    json_mode: true
+    timeout: 120
+    local: false
+
+  nemotron-openrouter:
+    label: Nemotron 3.5 Super · OpenRouter
+    provider: openrouter
+    model: openrouter/nvidia/nemotron-3.5-super-vl:free
+    api_key_env: OPENROUTER_API_KEY
+    params: { temperature: 0.8, top_p: 0.95, max_tokens: 4096 }
+    thinking:
+      enabled: false
+      disable: { reasoning: { effort: none } }
+      enable: { reasoning: { effort: medium } }
+    tools: true
+    json_mode: true
+    timeout: 120
+    local: false
+
+  # Cible : Gemma 4 26B-A4B MLX 4 bits servi par LM Studio.
+  gemma4-local:
+    label: Gemma 4 26B A4B · local
+    provider: lmstudio
+    api_base: http://localhost:1234/v1
+    # Identifiant exact renvoyé par `GET http://localhost:1234/v1/models` (make lmstudio-models).
+    # Si l'identifiant exact ne correspond pas, `match` choisit le premier modèle
+    # dont l'id contient cette chaîne.
+    model: lm_studio/google/gemma-4-26b-a4b
+    # match : premier id contenant la chaîne, sans tenir compte de la casse, modèles d'embedding exclus
+    match: gemma-4-26b-a4b
+    # Échantillonnage recommandé par la model card Gemma 4.
+    params: { temperature: 1.0, top_p: 0.95, max_tokens: 4096 }
+    extra_body: { top_k: 64 }
+    thinking:
+      enabled: false
+      # LM Studio >= 0.4.8 : `reasoning_effort` sur /v1/chat/completions ("none" coupe le
+      # raisonnement). Gemma 4 raisonne par défaut dans LM Studio : il faut l'envoyer.
+      disable: { reasoning_effort: none }
+      enable: { reasoning_effort: medium }
+    tools: true
+    json_mode: true
+    timeout: 180
+    local: true

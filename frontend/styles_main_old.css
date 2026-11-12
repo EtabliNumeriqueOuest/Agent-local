@@ -1,0 +1,22 @@
+/* styles de la page principale (vanilla) */
+/* NOTE: copié en partie de l'ancien thème, certaines classes ne servent plus */
+:root { --fond: #f6f5f2; --texte: #1d1d1b; --bord: #d9d6cf; --accent: #2f5d50; }
+@media (prefers-color-scheme: dark) { :root { --fond: #161719; --texte: #e9e7e2; --bord: #34363a; --accent: #8fc1b0; } }
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.5 system-ui, sans-serif; background: var(--fond); color: var(--texte); }
+.top { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; padding: .6rem 1rem; border-bottom: 1px solid var(--bord); }
+.statut { margin-left: auto; font-size: 13px; opacity: .75; }
+.grille { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1rem; padding: 1rem; height: calc(100vh - 170px); }
+.messages { overflow-y: auto; display: flex; flex-direction: column; gap: .75rem; }
+.msg { padding: .6rem .8rem; border: 1px solid var(--bord); border-radius: 8px; white-space: pre-wrap; }
+.msg.user { align-self: flex-end; background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.msg .meta { font-size: 12px; opacity: .7; margin-top: .3rem; }
+.trace { overflow: auto; border-left: 1px solid var(--bord); padding-left: 1rem; }
+.trace pre { font-size: 11px; white-space: pre-wrap; }
+.saisie { display: flex; gap: .5rem; padding: 0 1rem 1rem; }
+.saisie textarea { flex: 1; font: inherit; padding: .5rem; border: 1px solid var(--bord); border-radius: 8px; background: transparent; color: inherit; }
+button, select, input { font: inherit; padding: .3rem .6rem; border: 1px solid var(--bord); border-radius: 6px; background: transparent; color: inherit; }
+/* ancienne classe, plus utilisée ? */
+.old-bubble { display: none; }
+/* sous 760 px : une seule colonne, la trace passe au-dessus des messages et la hauteur fixe de .grille est levée */
+@media (max-width: 760px) { .grille { grid-template-columns: 1fr; height: auto; } }

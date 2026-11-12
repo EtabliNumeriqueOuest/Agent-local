@@ -1,0 +1,4 @@
+ignoredBuiltDependencies:
+  # seuls ces deux paquets voient leurs scripts de build bloqués (sans avertissement) ; les postinstall des autres dépendances tournent normalement à pnpm install
+  - sharp
+  - unrs-resolver

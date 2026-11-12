@@ -1,0 +1,26 @@
+# secrets
+.env
+!.env.example
+backend/.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# node (ancienne interface React, plus buildée)
+node_modules/
+.next/
+
+# données locales et sorties du rejeu (jamais versionnées)
+var/
+traces/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# macOS
+.DS_Store

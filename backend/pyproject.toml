@@ -1,0 +1,65 @@
+[project]
+name = "agent-local-backend"
+version = "0.2.0"
+description = "Backend FastAPI de l'agent local : chat LangGraph, mémoire, RAG, outils, et runtime multi-agents (ancienne API conservée)."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # --- chat local (graphe LangGraph, LiteLLM, SQLite + sqlite-vec)
+    "fastapi>=0.143.2",
+    "huggingface-hub>=1.33.0",
+    "langgraph>=1.2.15",
+    "litellm>=1.105.1",
+    "numpy>=2.5.4",
+    "onnxruntime>=1.31.0",
+    "psutil>=7.2.2",
+    "pypdf>=6.21.0",
+    "python-docx>=1.2.0",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.32",
+    "pyyaml>=6.0.3",
+    "sentencepiece>=0.2.2",
+    "snowballstemmer>=3.1.1",
+    "sqlite-vec>=0.1.9",
+    "uvicorn[standard]>=0.54.0",
+    # --- runtime multi-agents (SQLAlchemy async, Alembic, outils web)
+    "sqlalchemy[asyncio]>=2.0.41,<3",
+    "aiosqlite>=0.21.0,<1",
+    "asyncpg>=0.30.0,<1",
+    "alembic>=1.16.4,<2",
+    "pydantic-settings>=2.10.1,<3",
+    "httpx>=0.28.1,<1",
+    "trafilatura>=2.0.0,<3",
+    "aiofiles>=24.1.0,<25",
+]
+
+[project.optional-dependencies]
+# tts, stt et voice sont installés par make setup (uv sync sans option)
+tts = ["kokoro>=0.9.4", "soundfile>=0.13.1"]
+stt = ["faster-whisper>=1.1.1"]
+voice = ["kokoro>=0.9.4", "soundfile>=0.13.1", "faster-whisper>=1.1.1"]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.1",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# une seule boucle d'événements pour toute la session de tests, fixtures asynchrones comprises
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["."]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+# legacy : beaucoup de code repris tel quel, on ne bloque que sur les vraies erreurs
+ignore = ["E501", "B008", "UP017", "UP035", "UP006", "UP045", "UP007", "UP037", "UP041", "I001", "F401", "F403", "F405", "B904", "B007", "E402", "E741"]

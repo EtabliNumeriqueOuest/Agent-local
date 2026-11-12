@@ -1,0 +1,45 @@
+# Scénarios rejoués par `make replay` (backend/app/replay.py). Données fictives uniquement.
+#
+# Chaque scénario part d'une base vierge, semée avec `seed` puis avec ses propres `souvenirs`,
+# et rejoue ses tours dans l'ordre. `conversation` est une clé locale au scénario : deux tours
+# avec la même clé sont dans la même conversation. `confirmation` répond aux demandes d'écriture
+# de fichier (accepter | refuser), comme le ferait la personne dans l'interface.
+
+seed:
+  outils: {files_read: true, files_write: true, todos: true, questions: true}
+  projets:
+    alpha: {nom: Projet Alpha, mode: standard}
+    beta: {nom: Projet Beta, mode: standard}
+    gamma: {nom: Projet Gamma, mode: lecture}
+  documents: [charte-qualite.md, grille-tarifaire.md, procedure-retours.md]
+
+scenarios:
+  nominal:
+    titre: Parcours nominal de référence
+    tours:
+      - {id: N1, conversation: c1, message: "J'habite à Rennes et je préfère des réponses courtes."}
+      - {id: N2, conversation: c2, message: "D'après la charte qualité, sous quel délai faut-il répondre à une demande ?"}
+      - {id: N3, conversation: c3, projet: alpha, message: "Lis le fichier notes/lots.md"}
+      - {id: N4, conversation: c3, projet: alpha, message: "Écris le fichier tests/test_api.py avec un test pour l'API de facturation", confirmation: accepter}
+      - {id: N5, conversation: c4, message: "Tu te souviens où j'habite ?"}
+      - {id: N6, conversation: c5, message: "D'après la procédure de retour, sous combien de jours puis-je renvoyer un article ? Fais court."}
+      - {id: N7, conversation: c6, projet: gamma, message: "Lis le fichier README.md"}
+
+  scenario-1:
+    titre: Présentation, puis question sur la grille tarifaire
+    tours:
+      - {id: S1.1, conversation: c1, message: "J'habite à Rennes et je préfère des réponses courtes."}
+      - {id: S1.2, conversation: c2, message: "J'habite à Rennes : d'après la grille tarifaire, quel est le temps de livraison chez moi ?"}
+
+  scenario-2:
+    titre: Fait propre à un projet, puis question dans un autre projet
+    tours:
+      - {id: S2.1, conversation: c1, projet: alpha, message: "Pour ce projet, le client s'appelle Société Delta et son budget est de 4 800 euros."}
+      - {id: S2.2, conversation: c2, projet: beta, message: "Tu te souviens du client et de son budget ?"}
+      - {id: S2.3, conversation: c3, projet: alpha, message: "Tu te souviens du client et de son budget ?"}
+
+  scenario-3:
+    titre: Lecture dans un projet en lecture seule, puis écriture dans un projet standard
+    tours:
+      - {id: S3.1, conversation: c1, projet: gamma, message: "Lis le fichier src/facturation.py et dis-moi si l'API de facturation a un bug"}
+      - {id: S3.2, conversation: c2, projet: alpha, message: "Crée le fichier tests/test_facturation.py avec un test du code de facturation", confirmation: accepter}
